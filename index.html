@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PhD Command Centre</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--ink:#182230;--muted:#667085;--line:#e4e9f1;--blue:#3569d4;--blue-soft:#edf3ff;--green:#16845b;--green-soft:#e9f7f0;--amber:#a96508;--amber-soft:#fff4df;--red:#b54747;--purple:#7553b8;--shadow:0 8px 28px rgba(28,43,67,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:255px 1fr}
+.sidebar{background:#172337;color:#eaf0f8;padding:24px 16px;display:flex;flex-direction:column;gap:24px}
+.brand{display:flex;gap:11px;align-items:center;padding:0 9px}.brand-mark{width:34px;height:34px;border-radius:11px;background:#426fca;display:grid;place-items:center;font-weight:800}.brand strong{font-size:15px;letter-spacing:.2px}.brand small{display:block;color:#9eacc0;font-size:11px;margin-top:1px}
+.nav-label{color:#8292a9;text-transform:uppercase;font-size:10px;font-weight:750;letter-spacing:1.1px;padding:0 10px;margin-bottom:7px}
+.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#c8d2e1;text-align:left;padding:10px;border-radius:9px;display:flex;gap:10px;align-items:center}.nav button:hover,.nav button.active{background:#293b57;color:#fff}.nav .ico{width:19px;text-align:center;color:#a9bbd5}.side-note{margin-top:auto;border:1px solid #35445b;border-radius:12px;padding:13px;color:#b8c5d6;font-size:12px}.side-note strong{color:white;display:block;margin-bottom:4px}
+.main{min-width:0;padding:28px clamp(18px,4vw,54px) 60px;max-width:1500px;width:100%;margin:0 auto}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:25px}.crumb{color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 13px;border-radius:9px;font-weight:650}.btn:hover{border-color:#b9c8df;background:#fbfcff}.btn.primary{background:var(--blue);border-color:var(--blue);color:white}.btn.primary:hover{background:#2859bd}.btn.small{font-size:12px;padding:6px 9px}.btn.ghost{background:transparent}
+h1{font-size:29px;letter-spacing:-.8px;margin:0 0 6px}h2{font-size:17px;margin:0}h3{font-size:14px;margin:0}.sub{color:var(--muted);margin:0}.heading-row{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:22px 0}.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px 16px;box-shadow:var(--shadow)}.stat .label{color:var(--muted);font-size:11px;font-weight:700}.stat .num{font-size:25px;font-weight:760;letter-spacing:-.7px;margin:4px 0}.stat .hint{color:var(--muted);font-size:11px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);padding:19px;margin-bottom:17px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.progress{height:7px;background:#edf0f5;border-radius:20px;overflow:hidden}.progress span{height:100%;display:block;background:var(--green);border-radius:20px}
+.aim-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.aim-card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff;cursor:pointer;transition:.15s}.aim-card:hover{border-color:#9db5e7;transform:translateY(-1px)}.aim-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px}.aim-card p{margin:0 0 14px;color:var(--muted);font-size:12px}.aim-foot{display:flex;justify-content:space-between;align-items:center;margin-top:9px;font-size:11px;color:var(--muted)}
+.pill{font-size:10px;font-weight:750;padding:4px 8px;border-radius:30px;white-space:nowrap;background:#f0f2f6;color:#647084}.pill.active{background:var(--amber-soft);color:var(--amber)}.pill.done{background:var(--green-soft);color:var(--green)}.pill.blocked{background:#fff0f0;color:var(--red)}.pill.upcoming{background:#f0f2f6;color:#647084}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 20px}.tab{border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:9px;color:#526071;font-size:12px;font-weight:650}.tab.active{background:var(--blue-soft);border-color:#b8cbf4;color:#2457b5}
+.flow-wrap{overflow-x:auto;padding:5px 2px 12px}.flow{min-width:620px;max-width:850px;margin:0 auto;display:flex;flex-direction:column;align-items:center}.flow-node{width:min(100%,520px);border:1px solid var(--line);border-radius:12px;background:white;padding:13px 15px;box-shadow:0 3px 12px rgba(20,40,70,.035);position:relative}.flow-node.goal{background:#eef4ff;border-color:#b9cdf5;text-align:center}.flow-node.stage-complete{background:#e9f7f0;border-color:#8bc9a9}.flow-node.stage-complete .node-title{color:#146b4b}.stage-check{width:16px;height:16px;accent-color:#16845b;flex:none;margin:1px 7px 0 0;cursor:pointer}.node-title-wrap{display:flex;align-items:flex-start;min-width:0}.flow-node .node-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.flow-node .node-title{font-weight:720}.flow-node .node-desc{color:var(--muted);font-size:11px;margin-top:4px}.flow-node .node-meta{display:flex;gap:6px;align-items:center;margin-top:9px;flex-wrap:wrap}.connector{height:27px;width:1px;background:#bac6d7;position:relative}.connector:after{content:"";position:absolute;bottom:0;left:-4px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #bac6d7}
+.node-actions{display:flex;gap:5px}.icon-btn{border:0;background:transparent;color:#758196;padding:4px 5px;border-radius:6px}.icon-btn:hover{background:#eef2f8;color:#24364f}
+.branch-grid{display:grid;grid-template-columns:repeat(2,minmax(240px,1fr));gap:14px;width:100%;align-items:start}.branch{display:flex;flex-direction:column;align-items:center}.branch .flow-node{width:100%}.branch .connector{height:22px}
+.node-list{display:grid;gap:7px;width:100%}.mini-node{border:1px solid var(--line);border-radius:9px;padding:10px 11px;background:#fff;width:100%;display:flex;justify-content:space-between;gap:8px;align-items:center;text-align:left}.mini-node:hover{border-color:#a9bee8}.mini-node strong{font-size:12px}.mini-node small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#aab3c2;flex:none}.status-dot.active{background:#d89a28}.status-dot.done{background:#1c9b6b}.status-dot.blocked{background:#d45c5c}
+.task-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(230px,.8fr);gap:15px}.task-row{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #eff1f5}.task-row:last-child{border-bottom:0}.task-row input{margin-top:3px;accent-color:var(--green)}.task-row .task-main{flex:1}.task-row .task-title{font-weight:650;font-size:12px}.task-row .task-info{color:var(--muted);font-size:10px;margin-top:3px}.task-row.completed .task-title{text-decoration:line-through;color:#8490a1}
+.empty{padding:25px;text-align:center;color:var(--muted);font-size:12px}.callout{background:#f6f8fc;border:1px solid var(--line);border-radius:11px;padding:13px;font-size:12px;color:#566477}.callout strong{display:block;color:#27364a;margin-bottom:5px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(18,30,48,.42);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal-backdrop.open{display:flex}.modal{background:#fff;border-radius:16px;padding:22px;width:min(480px,100%);box-shadow:0 20px 70px rgba(0,0,0,.2)}.modal h2{margin-bottom:16px}.field{display:grid;gap:5px;margin:11px 0}.field label{font-size:11px;font-weight:700;color:#59677a}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:white;color:var(--ink)}.field textarea{min-height:68px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.toast{position:fixed;bottom:20px;right:20px;background:#172337;color:white;padding:11px 15px;border-radius:9px;font-size:12px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translateY(0)}
+.mobile-menu{display:none}
+@media(max-width:850px){.app{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:5;padding:11px 14px;display:block}.brand{padding:0}.brand-mark{width:30px;height:30px}.sidebar .nav-label,.side-note{display:none}.nav{display:flex;overflow:auto;margin-top:10px}.nav button{white-space:nowrap;padding:8px 10px;font-size:11px}.main{padding:20px 16px 45px}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.heading-row{display:block}.heading-row .btn{margin-top:12px}.aim-grid,.branch-grid,.task-layout{grid-template-columns:1fr}.topline{align-items:flex-start;flex-direction:column}.stats{gap:8px}.stat{padding:12px}.stat .num{font-size:21px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">P</div><div><strong>PhD Command Centre</strong><small>Research, organised</small></div></div>
+  <div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav" id="nav">
+      <button data-page="overview" class="active"><span class="ico">▦</span> PhD overview</button>
+      <button data-page="aim1"><span class="ico">①</span> Aim 1 · Affinity reagents</button>
+      <button data-page="aim2"><span class="ico">②</span> Aim 2 · Characterisation</button>
+      <button data-page="aim3"><span class="ico">③</span> Aim 3 · Cross-species</button>
+      <button data-page="thesis"><span class="ico">▤</span> Thesis & writing</button>
+    </nav>
+  </div>
+  <div class="side-note"><strong>Built around your research</strong>This is an editable starter workspace. Change the example aims, add tasks and make the map reflect your actual project.</div>
+</aside>
+<main class="main">
+  <div class="topline"><div class="crumb" id="crumb">Workspace / PhD overview</div><div class="top-actions"><button class="btn small" id="exportBtn">Export backup</button><button class="btn small" id="importBtn">Import backup</button><input type="file" id="importFile" accept="application/json" hidden></div></div>
+  <section id="content"></section>
+</main>
+</div>
+<div class="modal-backdrop" id="modalBackdrop"><div class="modal"><h2 id="modalTitle">Add task</h2><div id="modalBody"></div><div class="modal-actions"><button class="btn" id="cancelModal">Cancel</button><button class="btn primary" id="saveModal">Save</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const initial = {
+  overview:{title:"PhD overview",subtitle:"A connected view of your aims, experiments and thesis milestones."},
+  projects:[
+    {id:"aim1",name:"Aim 1",short:"Develop affinity reagents",desc:"Generate candidate marsupial affinity reagents, including the CD200 nanobody design campaign.",status:"active",goal:"Generate and validate candidate marsupial affinity reagents",nodes:[
+      {id:"a1n1",title:"Target preparation",desc:"Confirm target sequence, construct design and protein availability.",status:"done",duration:"Variable",children:[
+        {id:"a1t1",title:"Confirm target sequence and species",status:"done",duration:"1–2 h"},
+        {id:"a1t2",title:"Prepare or source target protein",status:"done",duration:"Several days"},
+        {id:"a1t3",title:"Check target quality and suitability",status:"done",duration:"Half day"}]},
+      {id:"a1n2",title:"Candidate generation",desc:"Computational design and/or library-based discovery.",status:"done",duration:"Several days",children:[
+        {id:"a1t4",title:"Generate RFdiffusion backbones",status:"done",duration:"1–2 days"},
+        {id:"a1t5",title:"Run ProteinMPNN sequence design",status:"done",duration:"1 day"},
+        {id:"a1t6",title:"Score candidates with RF2",status:"done",duration:"1–2 days"},
+        {id:"a1t7",title:"Rank and shortlist candidates",status:"done",duration:"Half day"}]},
+      {id:"a1n3",title:"Candidate production",desc:"Produce selected candidates for experimental testing.",status:"active",duration:"1–3 weeks",children:[
+        {id:"a1t8",title:"Confirm expression construct sequence",status:"active",duration:"30 min"},
+        {id:"a1t9",title:"Express candidate proteins",status:"upcoming",duration:"Several days"},
+        {id:"a1t10",title:"Purify candidate proteins",status:"upcoming",duration:"1–2 days"},
+        {id:"a1t11",title:"Check purity, identity and concentration",status:"upcoming",duration:"Half day"}]},
+      {id:"a1n4",title:"Binding validation",desc:"Establish a reliable assay and assess candidate binding.",status:"upcoming",duration:"2–4 weeks",children:[
+        {id:"a1t12",title:"Optimise binding assay and controls",status:"upcoming",duration:"Several days"},
+        {id:"a1t13",title:"Screen candidate binding",status:"upcoming",duration:"1–2 days"},
+        {id:"a1t14",title:"Repeat and confirm strongest candidates",status:"upcoming",duration:"Several days"}]}
+    ]},
+    {id:"aim2",name:"Aim 2",short:"Characterise binding",desc:"Determine binding behaviour, specificity and functional relevance of selected reagents.",status:"upcoming",goal:"Characterise selected affinity reagents",nodes:[
+      {id:"a2n1",title:"Select candidates for characterisation",desc:"Choose candidates based on initial validation.",status:"upcoming",duration:"Half day",children:[{id:"a2t1",title:"Review initial binding data",status:"upcoming",duration:"2 h"},{id:"a2t2",title:"Select candidates and controls",status:"upcoming",duration:"2 h"}]},
+      {id:"a2n2",title:"Develop characterisation assays",desc:"Establish assay conditions and appropriate controls.",status:"upcoming",duration:"1–2 weeks",children:[{id:"a2t3",title:"Choose assay format",status:"upcoming",duration:"2 h"},{id:"a2t4",title:"Optimise assay conditions",status:"upcoming",duration:"Several days"},{id:"a2t5",title:"Establish positive and negative controls",status:"upcoming",duration:"Several days"}]},
+      {id:"a2n3",title:"Measure binding properties",desc:"Generate reproducible quantitative data.",status:"upcoming",duration:"1–3 weeks",children:[{id:"a2t6",title:"Measure binding strength / apparent affinity",status:"upcoming",duration:"Several days"},{id:"a2t7",title:"Assess specificity",status:"upcoming",duration:"Several days"},{id:"a2t8",title:"Repeat key experiments",status:"upcoming",duration:"Several days"}]}
+    ]},
+    {id:"aim3",name:"Aim 3",short:"Cross-species validation",desc:"Explore whether affinity reagents recognise conserved targets across marsupial species.",status:"upcoming",goal:"Evaluate cross-species recognition of selected reagents",nodes:[
+      {id:"a3n1",title:"Identify comparative targets",desc:"Select homologous proteins and relevant species.",status:"upcoming",duration:"1–2 days",children:[{id:"a3t1",title:"Identify relevant marsupial orthologues",status:"upcoming",duration:"Half day"},{id:"a3t2",title:"Compare sequences and structures",status:"upcoming",duration:"1 day"}]},
+      {id:"a3n2",title:"Prepare comparative reagents",desc:"Produce or source proteins and cells for testing.",status:"upcoming",duration:"1–3 weeks",children:[{id:"a3t3",title:"Source or express comparative proteins",status:"upcoming",duration:"Several days"},{id:"a3t4",title:"Prepare cell-based test material",status:"upcoming",duration:"Several days"}]},
+      {id:"a3n3",title:"Test cross-species recognition",desc:"Compare binding across selected species.",status:"upcoming",duration:"1–2 weeks",children:[{id:"a3t5",title:"Run cross-species binding screen",status:"upcoming",duration:"1–2 days"},{id:"a3t6",title:"Analyse and compare results",status:"upcoming",duration:"1–2 days"}]}
+    ]},
+    {id:"thesis",name:"Thesis",short:"Thesis & writing",desc:"Connect research outputs to thesis chapters, figures, drafts and submission milestones.",status:"active",goal:"Complete and submit the thesis",nodes:[
+      {id:"thn1",title:"Thesis structure",desc:"Agree chapter structure and map aims to chapters.",status:"active",duration:"1 day",children:[{id:"tht1",title:"Confirm chapter outline",status:"active",duration:"2 h"},{id:"tht2",title:"Map experiments to chapters",status:"upcoming",duration:"Half day"}]},
+      {id:"thn2",title:"Write core chapters",desc:"Draft methods, results and discussion alongside experiments.",status:"upcoming",duration:"Ongoing",children:[{id:"tht3",title:"Draft introduction",status:"upcoming",duration:"1–2 weeks"},{id:"tht4",title:"Draft methods",status:"upcoming",duration:"Several days"},{id:"tht5",title:"Draft results chapters",status:"upcoming",duration:"Ongoing"},{id:"tht6",title:"Draft discussion",status:"upcoming",duration:"1–2 weeks"}]},
+      {id:"thn3",title:"Review and submission",desc:"Supervisor feedback, revisions, formatting and submission.",status:"upcoming",duration:"Final writing period",children:[{id:"tht7",title:"Send full draft for feedback",status:"upcoming",duration:"Milestone"},{id:"tht8",title:"Revise and format thesis",status:"upcoming",duration:"Several weeks"},{id:"tht9",title:"Submit thesis",status:"upcoming",duration:"Milestone"}]}
+    ]}
+  ]
+};
+let data = JSON.parse(localStorage.getItem("phd-command-centre-v1") || "null") || initial;
+let current="overview", editing=null;
+const $=s=>document.querySelector(s);
+const statusLabel=s=>({done:"Completed",active:"In progress",upcoming:"Upcoming",blocked:"Blocked"}[s]||s);
+const allTasks=()=>data.projects.flatMap(p=>p.nodes.flatMap(n=>n.children||[]));
+const allNodes=()=>data.projects.flatMap(p=>p.nodes);
+function save(){localStorage.setItem("phd-command-centre-v1",JSON.stringify(data));}
+function counts(p){let tasks=p.nodes.flatMap(n=>n.children||[]);let items=[...p.nodes,...tasks];let done=items.filter(x=>x.status==="done").length;return {done,total:items.length,pct:items.length?Math.round(done/items.length*100):0};}
+function overall(){let items=[...allNodes(),...allTasks()];let done=items.filter(x=>x.status==="done").length;return {done,total:items.length,pct:items.length?Math.round(done/items.length*100):0};}
+function toast(msg){let el=$("#toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2100);}
+function setPage(id){current=id;render();}
+function nav(){document.querySelectorAll("#nav button").forEach(b=>{b.classList.toggle("active",b.dataset.page===current);b.onclick=()=>setPage(b.dataset.page)});}
+function render(){nav();$("#crumb").textContent="Workspace / "+(current==="overview"?"PhD overview":data.projects.find(p=>p.id===current)?.name||"");current==="overview"?renderOverview():renderProject(data.projects.find(p=>p.id===current));}
+function renderOverview(){
+ const o=overall(), active=data.projects.filter(p=>p.status==="active").length, blocked=allTasks().filter(t=>t.status==="blocked").length;
+ $("#content").innerHTML=`<div class="heading-row"><div><h1>Your PhD, at a glance</h1><p class="sub">A connected roadmap for research aims, experiments and thesis writing.</p></div><button class="btn primary" id="addProject">＋ Add page</button></div>
+ <div class="stats"><div class="stat"><div class="label">OVERALL TASK PROGRESS</div><div class="num">${o.pct}%</div><div class="hint">${o.done} of ${o.total} stages and tasks completed</div></div><div class="stat"><div class="label">ACTIVE PAGES</div><div class="num">${active}</div><div class="hint">Aims or chapters in progress</div></div><div class="stat"><div class="label">OUTSTANDING TASKS</div><div class="num">${o.total-o.done}</div><div class="hint">Across all pages</div></div><div class="stat"><div class="label">BLOCKED TASKS</div><div class="num">${blocked}</div><div class="hint">Need attention</div></div></div>
+ <div class="panel"><div class="panel-head"><div><h2>PhD roadmap</h2><div class="sub" style="font-size:11px;margin-top:3px">Open a page to explore its experimental flowchart.</div></div><span class="pill active">${o.pct}% complete</span></div><div class="progress"><span style="width:${o.pct}%"></span></div></div>
+ <div class="panel"><div class="panel-head"><h2>Aims & chapters</h2><span class="sub" style="font-size:11px">${data.projects.length} pages</span></div><div class="aim-grid">${data.projects.map(p=>{let c=counts(p);return `<div class="aim-card" data-open="${p.id}"><div class="aim-top"><strong>${esc(p.name)}</strong><span class="pill ${p.status}">${statusLabel(p.status)}</span></div><p>${esc(p.desc)}</p><div class="progress"><span style="width:${c.pct}%"></span></div><div class="aim-foot"><span>${c.done}/${c.total} items complete</span><span>Open page →</span></div></div>`}).join("")}</div></div>
+ <div class="callout"><strong>How to use this workspace</strong>Open any aim or chapter, expand its stages, and update task statuses as work progresses. Add, edit or remove stages and tasks to make the map match your actual research. Your changes are saved in this browser.</div>`;
+ document.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>setPage(el.dataset.open));$("#addProject").onclick=()=>openModal("page");
+}
+function renderProject(p){
+ if(!p){setPage("overview");return}
+ let c=counts(p),tasks=p.nodes.flatMap(n=>n.children||[]);
+ $("#content").innerHTML=`<div class="heading-row"><div><div class="crumb" style="margin-bottom:7px"><a href="#" id="back" style="color:var(--blue);text-decoration:none">← PhD overview</a></div><h1>${esc(p.name)} · ${esc(p.short)}</h1><p class="sub">${esc(p.desc)}</p></div><div class="top-actions"><button class="btn" id="editPage">Edit page</button><button class="btn primary" id="addStage">＋ Add stage</button></div></div>
+ <div class="stats"><div class="stat"><div class="label">PROGRESS</div><div class="num">${c.pct}%</div><div class="hint">${c.done} of ${c.total} tasks completed</div></div><div class="stat"><div class="label">STAGES</div><div class="num">${p.nodes.length}</div><div class="hint">Major workflow steps</div></div><div class="stat"><div class="label">OPEN TASKS</div><div class="num">${tasks.filter(t=>t.status!=="done").length}</div><div class="hint">Still to complete</div></div><div class="stat"><div class="label">BLOCKED</div><div class="num">${tasks.filter(t=>t.status==="blocked").length}</div><div class="hint">Need a decision or input</div></div></div>
+ <div class="tabs"><button class="tab active" id="flowTab">Flowchart</button><button class="tab" id="taskTab">Task list</button></div>
+ <div id="projectView"></div>`;
+ $("#back").onclick=e=>{e.preventDefault();setPage("overview")};$("#editPage").onclick=()=>openModal("editPage",p.id);$("#addStage").onclick=()=>openModal("stage",p.id);
+ $("#flowTab").onclick=()=>{ $("#flowTab").classList.add("active");$("#taskTab").classList.remove("active");renderFlow(p)};
+ $("#taskTab").onclick=()=>{ $("#taskTab").classList.add("active");$("#flowTab").classList.remove("active");renderTasks(p)};
+ renderFlow(p);
+}
+function renderFlow(p){
+ let view=$("#projectView");
+ view.innerHTML=`<div class="panel"><div class="panel-head"><div><h2>Experimental workflow</h2><div class="sub" style="font-size:11px;margin-top:3px">Select a stage to expand its tasks. Edit the flow as your research changes.</div></div><button class="btn small" id="addTaskTop">＋ Add task</button></div><div class="flow-wrap"><div class="flow"><div class="flow-node goal"><div class="node-title">${esc(p.goal)}</div><div class="node-desc">Page objective</div></div><div class="connector"></div><div class="branch-grid">${p.nodes.map((n,i)=>`<div class="branch"><div class="flow-node ${n.status==="done"?"stage-complete":""}"><div class="node-head"><div class="node-title-wrap"><input class="stage-check" type="checkbox" aria-label="Mark ${esc(n.title)} complete" data-stage-check="${n.id}" ${n.status==="done"?"checked":""}><div><div class="node-title">${i+1}. ${esc(n.title)}</div><div class="node-desc">${esc(n.desc||"")}</div></div></div><div class="node-actions"><button class="icon-btn" title="Edit stage" data-edit-stage="${n.id}">✎</button><button class="icon-btn" title="Delete stage" data-del-stage="${n.id}">×</button></div></div><div class="node-meta"><span class="pill ${n.status}">${statusLabel(n.status)}</span><span class="pill">${(n.children||[]).filter(t=>t.status==="done").length}/${(n.children||[]).length} tasks</span><span class="pill">${esc(n.duration||"Duration TBD")}</span></div><div class="connector" style="margin:0 auto"></div><div class="node-list">${(n.children||[]).map(t=>`<button class="mini-node" data-edit-task="${t.id}"><span><strong>${esc(t.title)}</strong><small>${esc(t.duration||"Estimate not set")}</small></span><span class="status-dot ${t.status}" title="${statusLabel(t.status)}"></span></button>`).join("")}<button class="btn small" style="width:100%;margin-top:4px" data-add-task="${n.id}">＋ Add task to stage</button></div></div></div>`).join("")}</div></div></div></div><div class="callout"><strong>Tip</strong>Use stage cards for major experimental milestones and the smaller cards for actions you can actually complete. If an experiment has a go/no-go outcome, add separate stages for each pathway.</div>`;
+ $("#addTaskTop").onclick=()=>openModal("task",p.id);
+ document.querySelectorAll("[data-stage-check]").forEach(el=>el.onchange=()=>toggleStage(p,el.dataset.stageCheck,el.checked));
+ document.querySelectorAll("[data-edit-stage]").forEach(b=>b.onclick=()=>openModal("editStage",p.id,b.dataset.editStage));
+ document.querySelectorAll("[data-del-stage]").forEach(b=>b.onclick=()=>deleteStage(p,b.dataset.delStage));
+ document.querySelectorAll("[data-edit-task]").forEach(b=>b.onclick=()=>openModal("editTask",p.id,b.dataset.editTask));
+ document.querySelectorAll("[data-add-task]").forEach(b=>b.onclick=()=>openModal("task",p.id,b.dataset.addTask));
+}
+function renderTasks(p){
+ let tasks=p.nodes.flatMap(n=>(n.children||[]).map(t=>({...t,stage:n.title})));
+ $("#projectView").innerHTML=`<div class="task-layout"><div class="panel"><div class="panel-head"><h2>All tasks</h2><button class="btn small" id="addTaskList">＋ Add task</button></div>${tasks.map(t=>`<div class="task-row ${t.status==="done"?"completed":""}"><input type="checkbox" data-check="${t.id}" ${t.status==="done"?"checked":""}><div class="task-main"><div class="task-title">${esc(t.title)}</div><div class="task-info">${esc(t.stage)} · ${esc(t.duration||"Estimate not set")}</div></div><select data-status="${t.id}" aria-label="Task status" style="border:1px solid var(--line);border-radius:7px;padding:5px;font-size:10px"><option value="upcoming" ${t.status==="upcoming"?"selected":""}>Upcoming</option><option value="active" ${t.status==="active"?"selected":""}>In progress</option><option value="blocked" ${t.status==="blocked"?"selected":""}>Blocked</option><option value="done" ${t.status==="done"?"selected":""}>Completed</option></select><button class="icon-btn" data-edit-task="${t.id}">✎</button></div>`).join("")}</div><div class="panel"><h2 style="margin-bottom:12px">Progress</h2><div class="num" style="font-size:28px;font-weight:760">${counts(p).pct}%</div><div class="progress" style="margin:9px 0 14px"><span style="width:${counts(p).pct}%"></span></div><div class="callout">A task is complete when its outcome has been achieved, not merely when time has been spent on it.</div></div></div>`;
+ $("#addTaskList").onclick=()=>openModal("task",p.id);
+ document.querySelectorAll("[data-check]").forEach(el=>el.onchange=()=>updateTaskStatus(p,el.dataset.check,el.checked?"done":"active"));
+ document.querySelectorAll("[data-status]").forEach(el=>el.onchange=()=>updateTaskStatus(p,el.dataset.status,el.value));
+ document.querySelectorAll("[data-edit-task]").forEach(el=>el.onclick=()=>openModal("editTask",p.id,el.dataset.editTask));
+}
+function toggleStage(p,id,checked){
+ let n=p.nodes.find(x=>x.id===id);if(!n)return;
+ n.status=checked?"done":"active";
+ save();render();
+ toast(checked?"Stage completed":"Stage reopened");
+}
+function updateTaskStatus(p,id,status){for(const n of p.nodes){let t=(n.children||[]).find(x=>x.id===id);if(t){t.status=status;let states=n.children.map(x=>x.status);n.status=states.every(x=>x==="done")?"done":states.some(x=>x==="active"||x==="done")?"active":states.some(x=>x==="blocked")?"blocked":"upcoming";break;}}save();render();toast("Task updated");}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function openModal(type,pid="",id=""){
+ editing={type,pid,id};let p=data.projects.find(x=>x.id===pid),obj=null;
+ if(type==="editPage")obj=p;
+ if(type==="editStage")obj=p.nodes.find(x=>x.id===id);
+ if(type==="editTask")obj=p.nodes.flatMap(n=>n.children||[]).find(x=>x.id===id);
+ const title={page:"Add a page",editPage:"Edit page",stage:"Add a stage",editStage:"Edit stage",task:"Add a task",editTask:"Edit task"}[type];
+ $("#modalTitle").textContent=title;
+ let fields="";
+ if(type==="page"||type==="editPage")fields=`<div class="field"><label>Page name</label><input name="name" value="${esc(obj?.name||"New aim")}" required></div><div class="field"><label>Short description</label><input name="short" value="${esc(obj?.short||"Research objective")}"></div><div class="field"><label>What is the objective?</label><textarea name="desc">${esc(obj?.desc||"")}</textarea></div><div class="field"><label>Completion goal</label><input name="goal" value="${esc(obj?.goal||"Complete this aim")}"></div><div class="field"><label>Page status</label>${statusSelect(obj?.status||"upcoming")}</div>`;
+ if(type==="stage"||type==="editStage")fields=`<div class="field"><label>Stage name</label><input name="title" value="${esc(obj?.title||"New stage")}" required></div><div class="field"><label>Description</label><textarea name="desc">${esc(obj?.desc||"")}</textarea></div><div class="field"><label>Estimated duration</label><input name="duration" value="${esc(obj?.duration||"Not estimated")}"></div><div class="field"><label>Status</label>${statusSelect(obj?.status||"upcoming")}</div>`;
+ if(type==="task"||type==="editTask"){let stages=p.nodes;let currentStage=type==="editTask"?stages.find(n=>n.children.some(t=>t.id===id))?.id:"";fields=`<div class="field"><label>Task name</label><input name="title" value="${esc(obj?.title||"New task")}" required></div><div class="field"><label>Stage</label><select name="stage">${stages.map(n=>`<option value="${n.id}" ${(currentStage===n.id||(!currentStage&&id===n.id))?"selected":""}>${esc(n.title)}</option>`).join("")}</select></div><div class="field"><label>Estimated time</label><input name="duration" value="${esc(obj?.duration||"Not estimated")}"></div><div class="field"><label>Status</label>${statusSelect(obj?.status||"upcoming")}</div>`;}
+ $("#modalBody").innerHTML=fields;$("#modalBackdrop").classList.add("open");
+}
+function statusSelect(value){return `<select name="status"><option value="upcoming" ${value==="upcoming"?"selected":""}>Upcoming</option><option value="active" ${value==="active"?"selected":""}>In progress</option><option value="blocked" ${value==="blocked"?"selected":""}>Blocked</option><option value="done" ${value==="done"?"selected":""}>Completed</option></select>`;}
+function closeModal(){$("#modalBackdrop").classList.remove("open");editing=null;}
+function saveModal(){
+ if(!editing)return;const body=$("#modalBody");const get=n=>body.querySelector(`[name="${n}"]`)?.value||"";
+ let {type,pid,id}=editing,p=data.projects.find(x=>x.id===pid);
+ if(type==="page"){let slug="page"+Date.now();data.projects.push({id:slug,name:get("name"),short:get("short"),desc:get("desc"),goal:get("goal"),status:get("status"),nodes:[]});let b=document.createElement("button");b.dataset.page=slug;b.innerHTML=`<span class="ico">＋</span> ${esc(get("name"))}`;b.onclick=()=>setPage(slug);$("#nav").appendChild(b);current=slug;}
+ if(type==="editPage"){Object.assign(p,{name:get("name"),short:get("short"),desc:get("desc"),goal:get("goal"),status:get("status")});}
+ if(type==="stage"){p.nodes.push({id:"stage"+Date.now(),title:get("title"),desc:get("desc"),duration:get("duration"),status:get("status"),children:[]});}
+ if(type==="editStage"){let n=p.nodes.find(x=>x.id===id);Object.assign(n,{title:get("title"),desc:get("desc"),duration:get("duration"),status:get("status")});}
+ if(type==="task"){let stage=p.nodes.find(n=>n.id===get("stage"));stage.children.push({id:"task"+Date.now(),title:get("title"),duration:get("duration"),status:get("status")});}
+ if(type==="editTask"){let old=null;for(let n of p.nodes){let idx=n.children.findIndex(t=>t.id===id);if(idx>=0){old=n.children[idx];n.children.splice(idx,1);break;}}let stage=p.nodes.find(n=>n.id===get("stage"));stage.children.push({...old,id,title:get("title"),duration:get("duration"),status:get("status")});}
+ save();closeModal();render();toast("Changes saved");
+}
+function makeForm(){return document.createElement("form")}
+function deleteStage(p,id){if(!confirm("Delete this stage and all its tasks?"))return;p.nodes=p.nodes.filter(n=>n.id!==id);save();render();toast("Stage deleted");}
+$("#cancelModal").onclick=closeModal;$("#saveModal").onclick=saveModal;$("#modalBackdrop").onclick=e=>{if(e.target.id==="modalBackdrop")closeModal()};
+$("#exportBtn").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="phd-command-centre-backup.json";a.click();URL.revokeObjectURL(a.href);toast("Backup exported");};
+$("#importBtn").onclick=()=>$("#importFile").click();$("#importFile").onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let parsed=JSON.parse(await file.text());if(!parsed.projects)throw Error();data=parsed;save();current="overview";render();toast("Backup imported");}catch{alert("That file doesn't look like a valid workspace backup.");}e.target.value="";};
+render();
+</script>
+</body>
+</html>
